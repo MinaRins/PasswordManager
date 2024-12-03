@@ -51,6 +51,29 @@ fun runMenu() {
     } while (true)
 }
 
+fun searchPassword() {
+    val searchApp = readNextLine("Enter the App or Website")
+    val searchResults = PasswordAPI.searchByApp(searchApp)
+    if (searchResults.isEmpty()) {
+        println("No Passwords found")
+    } else {
+        (searchResults)
+    }
+}
+
+fun deletePassword() {
+    listPasswords()
+    if (PasswordAPI.numberOfPasswords() > 0) {
+        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
+        val PasswordToDelete = PasswordAPI.deletePassword(IDToDelete)
+        if (PasswordToDelete != null) {
+            println("Delete Successful! Deleted Password: ${PasswordToDelete.Username}")
+        } else {
+            println("Delete is not Successful ):")
+        }
+    }
+}
+
 fun listPasswords() {
     if (PasswordAPI.numberOfPasswords() > 0) {
         val option = readNextInt(
@@ -109,29 +132,7 @@ fun updatePassword() {
             }
         }
 
-fun deletePassword(){
 
-    listPasswords()
-    if (PasswordAPI.numberOfPasswords() > 0) {
-        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
-        val PasswordToDelete = PasswordAPI.deletePassword(IDToDelete)
-        if (PasswordToDelete != null) {
-            println("Delete Successful! Deleted Password: ${PasswordToDelete.Username}")
-        } else {
-            println("Delete is not Successful ):")
-        }
-    }
-}
-
-fun searchNotes() {
-    val searchTitle = readNextLine("Enter the description to search by: ")
-    val searchResults = noteAPI.searchByTitle(searchTitle)
-    if (searchResults.isEmpty()) {
-        println("No notes found")
-    } else {
-        println(searchResults)
-    }
-}
 
 fun listActiveNotes() {
     println(noteAPI.listActiveNotes())
