@@ -18,7 +18,7 @@ package controllers
                 formatListString(passwords)
             }
 
-        fun deleteNote(IDToDelete: Int): Password? {
+        fun deletePassword(IDToDelete: Int): Password? {
             return if (isValidListID(IDToDelete)) {
                 passwords.removeAt(IDToDelete)
             } else {

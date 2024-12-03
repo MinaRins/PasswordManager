@@ -94,7 +94,6 @@ fun listPasswords() {
 }
 
 fun addPassword() {
-    logger.info { "addPassword() function invoked" }
     print("Please a Username for your Password: ")
     val Username = readLine().toString()
     print("Enter the app/website for the password: ")
@@ -116,7 +115,7 @@ fun updatePassword() {
     listPasswords()
     if (PasswordAPI.numberOfPasswords() > 0) {
         val IDToUpdate = readNextInt("Enter the ID of the Password to update: ")
-        (IDToUpdate) {
+        if (PasswordAPI.isValidListID(IDToUpdate)) {
             val Username = readLine().toString()
             print("Enter the app/website for the password: ")
             val App = readLine().toString()
@@ -132,23 +131,25 @@ fun updatePassword() {
             }
         }
 
-fun save() {
-    try {
-        PasswordAPI.store()
-    } catch (e: Exception) {
-        System.err.println("Error writing to file: $e")
-    }
-}
+        fun save() {
+            try {
+                PasswordAPI.store()
+            } catch (e: Exception) {
+                System.err.println("Error writing to file: $e")
+            }
+        }
 
-fun load() {
-    try {
-        PasswordAPI.load()
-    } catch (e: Exception) {
-        System.err.println("Error reading from file: $e")
-    }
-}
+        fun load() {
+            try {
+                PasswordAPI.load()
+            } catch (e: Exception) {
+                System.err.println("Error reading from file: $e")
+            }
+        }
 
-fun exitApp() {
-    println("Exiting...bye")
-    exitProcess(0)
+        fun exitApp() {
+            println("Exiting...bye")
+            exitProcess(0)
+        }
+    }
 }
