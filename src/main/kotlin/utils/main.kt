@@ -8,7 +8,7 @@ import java.io.File
 import kotlin.system.exitProcess
 
 // private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
-private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+private val PasswordAPI = PasswordAPI(JSONSerializer(File("notes.json")))
 
 fun main() {
     runMenu()
@@ -19,16 +19,16 @@ fun mainMenu(): Int {
         """ 
          > ----------------------------------
          > |        Password Manager        |
-         > | NOTE MENU                      |
+         > | PASSWORD MENU                  |
          > |   1) Add a password            |
          > |   2) List all passwords        |
          > |   3) Update a password         |
-         > |   4) Delete a note             |         
-         > |   6) Search password (by app)  |
-         > |   7) Save password             |
-         > |   8) Load password             |
+         > |   4) Delete a password         |         
+         > |   5) Search password (by app)  |
+         > |   6) Save password             |
+         > |   7) Load password             |
          > ----------------------------------
-         > |   9) Exit                      |
+         > |   8) Exit                      |
          > ---------------------------------- 
          >""".trimMargin(">")
     )
@@ -38,49 +38,50 @@ fun mainMenu(): Int {
 fun runMenu() {
     do {
         when (val option = mainMenu()) {
-            1 -> addNote()
-            2 -> listNotes()
-            3 -> updateNote()
-            4 -> deleteNote()
-            5 -> archiveNote()
-            6 -> searchNotes()
-            20 -> save()
-            21 -> load()
-            0 -> exitApp()
+            1 -> addPassword()
+            2 -> listPassword()
+            3 -> updatePassword()
+            4 -> deletePassword()
+            5 -> searchPassword()
+            6 -> save()
+            7 -> load()
+            8 -> exitApp()
             else -> println("Invalid option entered: $option")
         }
     } while (true)
 }
 
-fun listNotes() {
-    if (noteAPI.numberOfNotes() > 0) {
+fun listPasswords() {
+    if (PasswordAPI.numberOfPasswords() > 0) {
         val option = readNextInt(
             """
                   > --------------------------------
-                  > |   1) View ALL notes          |
-                  > |   2) View ACTIVE notes       |
-                  > |   3) View ARCHIVED notes     |
+                  > |   1) View ALL Passwords         |
                   > --------------------------------
          > ==>> """.trimMargin(">")
         )
 
         when (option) {
-            1 -> listAllNotes()
-            2 -> listActiveNotes()
-            3 -> listArchivedNotes()
+            1 -> listAllPasswords()
             else -> println("Invalid option entered: $option")
         }
     } else {
-        println("Option Invalid - No notes stored")
+        println("Option Invalid - No Password stored")
     }
 }
 
-fun addNote() {
-    val noteTitle = readNextLine("Enter a title for the note: ")
-    val notePriority = readValidPriority("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-    val noteCategory = readValidCategory("Enter a category for the note from $categories: ")
+fun addPassword() {
+    logger.info { "addPassword() function invoked" }
+    print("Please a Username for your Password: ")
+    val Username = readLine().toString()
+    print("Enter the app/website for the password: ")
+    val App = readLine()?.toInt()
+    print("Enter a Password: ")
+    val Password = readLine().toString()
+    print("Enter a Password ID: ")
+    val PasswordID = readLine()?.toInt()
 
-    val isAdded = noteAPI.add(Note(noteTitle, notePriority, noteCategory, false))
+    val isAdded = PasswordAPI.add(Password(Username, App, Password, PasswordID))
 
     if (isAdded) {
         println("Added Successfully")
@@ -88,7 +89,6 @@ fun addNote() {
         println("Add Failed")
     }
 }
-
 fun updateNote() {
     // logger.info { "updateNotes() function invoked" }
     listNotes()
