@@ -85,7 +85,7 @@ fun listPasswords() {
         )
 
         when (option) {
-            1 -> listAllPasswords()
+            1 -> PasswordAPI.listAllPasswords()
             else -> println("Invalid option entered: $option")
         }
     } else {
