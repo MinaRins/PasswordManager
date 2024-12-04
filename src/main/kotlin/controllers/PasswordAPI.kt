@@ -11,12 +11,7 @@ package controllers
             return passwords.add(newPassword)
         }
 
-        fun listAllPasswords(): String =
-            if (passwords.isEmpty()) {
-                "No password stored"
-            } else {
-                formatListString(passwords)
-            }
+        fun listAllPasswords(): List<Password> = passwords
 
         fun deletePassword(IDToDelete: Int): Password? {
             return if (isValidListID(IDToDelete)) {
@@ -44,16 +39,16 @@ package controllers
                 passwords.filter { password -> password.Username.contains(searchString, ignoreCase = true) }
             )
 
-        fun isValidListID(ID: Int): Boolean {
-            return isValidListID(ID)
+        fun findPassword(ID: Int): Password? {
+            return if (isValidListID(ID)) {
+                passwords[ID]
+            } else {
+                null
+            }
         }
 
-         fun findPassword(ID: Int): Password? {
-         return if (isValidListID(ID)) {
-         passwords[ID]
-         } else {
-          null
-       }
+        fun isValidListID(PasswordID: Int): Boolean {
+            return isValidListID(PasswordID)
         }
 
 

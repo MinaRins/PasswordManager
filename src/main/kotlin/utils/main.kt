@@ -7,7 +7,7 @@ import utils.readNextLine
 import java.io.File
 import kotlin.system.exitProcess
 
-// private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+// private val passwordAPI = PasswordAPI(XMLSerializer(File("passwords.xml")))
 private val PasswordAPI = PasswordAPI(JSONSerializer(File("notes.json")))
 
 fun main() {
@@ -39,7 +39,7 @@ fun runMenu() {
     do {
         when (val option = mainMenu()) {
             1 -> addPassword()
-            2 -> listPassword()
+            2 -> listPassword(PasswordAPI)
             3 -> updatePassword()
             4 -> deletePassword()
             5 -> searchPassword()
@@ -51,12 +51,25 @@ fun runMenu() {
     } while (true)
 }
 
-fun listPassword() {
+fun listPassword(passwordAPI: PasswordAPI) {
+        val passwords = passwordAPI.listAllPasswords() // Retrieve the list of passwords
+        if (passwords.isEmpty()) {
+            println("No passwords available.")
+            return
+        } else {
+            println("Here are all the available passwords:")
+            for ((index, password) in passwords.withIndex()) { // Use withIndex() to get index and object
+                println("${index + 1}. ${password.Username} - ${password.App} - ${password.Password} (${password.PasswordID})")
+            }
+        }
+
+
     if (PasswordAPI.numberOfPasswords() > 0) {
+
         val option = readNextInt(
             """
                   > --------------------------------
-                  > |   1) View ALL Passwords         |
+                  > |   1) View Password Manager    |
                   > --------------------------------
          > ==>> """.trimMargin(">")
         )
@@ -94,6 +107,7 @@ fun searchPassword() {
         (searchResults)
     }
 }
+
 
 fun deletePassword() {
     PasswordAPI.listAllPasswords()
