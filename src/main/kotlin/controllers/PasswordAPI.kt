@@ -36,10 +36,11 @@ package controllers
 
         fun searchByApp(searchString: String) =
             formatListString(
-                passwords.filter { password -> password.Username.contains(searchString, ignoreCase = true) }
+                passwords.filter { password -> password.App.contains(searchString, ignoreCase = true) }
             )
 
-        fun findPassword(ID: Int): Password? {
+        fun findPassword(ID: Int):
+                Password? {
             return if (isValidListID(ID)) {
                 passwords[ID]
             } else {
@@ -47,10 +48,9 @@ package controllers
             }
         }
 
-        fun isValidListID(PasswordID: Int): Boolean {
-            return isValidListID(PasswordID)
+        fun isValidListID(index: Int): Boolean {
+            return index >= 0 && index < passwords.size
         }
-
 
         fun numberOfPasswords(): Int {
             return passwords.size

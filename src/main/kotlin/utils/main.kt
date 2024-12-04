@@ -1,4 +1,3 @@
-
 import controllers.PasswordAPI
 import models.Password
 import persistence.JSONSerializer
@@ -84,11 +83,9 @@ fun listPassword(passwordAPI: PasswordAPI) {
 }
 
 fun exitApp() {
-    fun exitApp() {
         println("Exiting...bye")
         exitProcess(0)
     }
-}
 
 fun save() {
     try {
