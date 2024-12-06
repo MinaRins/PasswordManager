@@ -21,23 +21,22 @@ package controllers
             }
         }
 
-        fun updatePassword(IDToUpdate: Int, password: Password?): Boolean {
+        fun updatePassword(IDToUpdate: Int, updatedPassword: Password): Boolean {
             val foundPassword = findPassword(IDToUpdate)
 
-            if ((foundPassword != null) && (password != null)) {
-                foundPassword.Username = password.Username
-                foundPassword.App = password.App
-                foundPassword.Password = password.Password
-                foundPassword.PasswordID = password.PasswordID
+            if (foundPassword != null) {
+                foundPassword.Username = updatedPassword.Username
+                foundPassword.App = updatedPassword.App
+                foundPassword.Password = updatedPassword.Password
+                // Do not update the ID!
                 return true
             }
             return false
         }
 
-        fun searchByApp(searchString: String) =
-            formatListString(
-                passwords.filter { password -> password.App.contains(searchString, ignoreCase = true) }
-            )
+        fun findOne(App: String?): Password? {
+            return passwords.find { password -> password.App.equals(App, ignoreCase = true) }
+        }
 
         fun findPassword(ID: Int):
                 Password? {

@@ -50,6 +50,83 @@ fun runMenu() {
     } while (true)
 }
 
+fun load() {
+    try {
+        PasswordAPI.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
+    }
+}
+
+fun deletePassword() {
+    if (PasswordAPI.numberOfPasswords() > 0) {
+        val passwords = PasswordAPI.listAllPasswords()
+        println("Here are all your passwords!")
+        passwords.forEachIndexed { index, password ->
+            println("$index) ${password.Username} - ${password.App} - ${password.PasswordID}")
+        }
+        //ID of the password to delete
+        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
+        val passwordToDelete = PasswordAPI.deletePassword(IDToDelete)
+
+        if (passwordToDelete != null) {
+            println("Delete Successful! Deleted Password: ${passwordToDelete.Username}")
+        } else {
+            println("Delete isnt successful")
+        }
+    } else {
+        println("No passwords to delete! :o")
+    }
+}
+fun updatePassword() {
+    if (PasswordAPI.numberOfPasswords() > 0) {
+        // List all passwords
+        val passwords = PasswordAPI.listAllPasswords()
+        println("Here are all your passwords:")
+        passwords.forEach {
+            println("ID: ${it.PasswordID}, Username: ${it.Username}, App: ${it.App}")
+        }
+        val IDToUpdate = readNextInt("Enter the ID of the Password to update: ")
+
+        if (PasswordAPI.isValidListID(IDToUpdate)) {
+            print("Enter the updated Username: ")
+            val Username = readLine().orEmpty()
+            print("Enter the updated App/Website: ")
+            val App = readLine().orEmpty()
+            print("Enter the updated Password: ")
+            val Password = readLine().orEmpty()
+            if (PasswordAPI.updatePassword(IDToUpdate, Password(Username, App, Password, IDToUpdate))) {
+                println("Update has been made successfully!")
+            } else {
+                println("Update Failed. Could not find a password with the given ID.")
+            }
+        } else {
+            println("Invalid Password ID.")
+        }
+    } else {
+        println("No passwords available to update.")
+    }
+}
+
+fun addPassword() {
+    print("Please a Username for your Password: ")
+    val Username = readLine().toString()
+    print("Enter the app/website for the password: ")
+    val App = readLine().toString()
+    print("Enter a Password: ")
+    val Password = readLine().toString()
+    print("Enter a Password ID: ")
+    val PasswordID = readLine()?.toInt()
+
+    val isAdded = PasswordAPI.add(Password(Username, App, Password, PasswordID))
+
+    if (isAdded) {
+        println("Added Successfully")
+    } else {
+        println("Add Failed")
+    }
+}
+
 fun listPassword(passwordAPI: PasswordAPI) {
         val passwords = passwordAPI.listAllPasswords() // Retrieve the list of passwords
         if (passwords.isEmpty()) {
@@ -95,76 +172,19 @@ fun save() {
     }
 }
 
+fun getPasswordByApp(): Password? {
+    print("Enter the App/Website to search by: ")
+    val App = readLine()
+    return PasswordAPI.findOne(App)
+}
+
 fun searchPassword() {
-    val searchApp = readNextLine("Enter the App or Website")
-    val searchResults = PasswordAPI.searchByApp(searchApp)
-    if (searchResults.isEmpty()) {
-        println("No Passwords found")
+    println("Searching for password")
+
+    val searchedPassword = getPasswordByApp()
+    if (searchedPassword == null) {
+        println("No passowrd found :c")
     } else {
-        (searchResults)
+        println("Password found! :D $searchedPassword")
     }
 }
-
-
-fun deletePassword() {
-    PasswordAPI.listAllPasswords()
-    if (PasswordAPI.numberOfPasswords() > 0) {
-        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
-        val PasswordToDelete = PasswordAPI.deletePassword(IDToDelete)
-        if (PasswordToDelete != null) {
-            println("Delete Successful! Deleted Password: ${PasswordToDelete.Username}")
-        } else {
-            println("Delete is not Successful ):")
-        }
-    }
-}
-
-
-fun addPassword() {
-    print("Please a Username for your Password: ")
-    val Username = readLine().toString()
-    print("Enter the app/website for the password: ")
-    val App = readLine().toString()
-    print("Enter a Password: ")
-    val Password = readLine().toString()
-    print("Enter a Password ID: ")
-    val PasswordID = readLine()?.toInt()
-
-    val isAdded = PasswordAPI.add(Password(Username, App, Password, PasswordID))
-
-    if (isAdded) {
-        println("Added Successfully")
-    } else {
-        println("Add Failed")
-    }
-}
-
-fun load() {
-    try {
-        PasswordAPI.load()
-    } catch (e: Exception) {
-        System.err.println("Error reading from file: $e")
-    }
-}
-
-    fun updatePassword() {
-        PasswordAPI.listAllPasswords()
-        if (PasswordAPI.numberOfPasswords() > 0) {
-            val IDToUpdate = readNextInt("Enter the ID of the Password to update: ")
-            if (PasswordAPI.isValidListID(IDToUpdate)) {
-                val Username = readLine().toString()
-                print("Enter the app/website for the password: ")
-                val App = readLine().toString()
-                print("Enter a Password: ")
-                val Password = readLine().toString()
-                print("Enter a Password ID: ")
-                val PasswordID = readLine()?.toInt()
-
-                if (PasswordAPI.updatePassword(IDToUpdate, Password(Username, App, Password, PasswordID))) {
-                    println("Update has been made")
-                } else {
-                    println("Update Failed")
-                }
-            }
-        }
-    }
