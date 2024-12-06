@@ -82,7 +82,7 @@ fun updatePassword() {
     if (PasswordAPI.numberOfPasswords() > 0) {
         // List all passwords
         val passwords = PasswordAPI.listAllPasswords()
-        println("Here are all your passwords:")
+        println("Here are all of ur Passwords!")
         passwords.forEach {
             println("ID: ${it.PasswordID}, Username: ${it.Username}, App: ${it.App}")
         }
