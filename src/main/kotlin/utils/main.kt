@@ -1,5 +1,7 @@
 import controllers.PasswordAPI
 import models.Password
+import controllers.UserAPI
+import models.User
 import persistence.JSONSerializer
 import utils.readNextInt
 import java.io.File
@@ -7,8 +9,23 @@ import kotlin.system.exitProcess
 
 //makes private val passwordAPI = PasswordAPI(XMLSerializer(File("passwords.xml")))
 private val PasswordAPI = PasswordAPI(JSONSerializer(File("passwords.json")))
+private val userAPI = UserAPI()
+private var loggedInUser: User? = null
 
 
+fun loginMenu(): Int {
+    println(
+        """
+        > ----------------------------
+        > ☆     Login or Register    ☆
+        > ----------------------------
+        > 1) Login
+        > 2) Register
+        > 3) Exit
+        """.trimMargin(">")
+    )
+    return readNextInt(" > ==>> ")
+}
 
 fun main() {
     runMenu()
@@ -37,10 +54,20 @@ fun mainMenu(): Int {
     return readNextInt(" > ==>>")
 }
 
-/**
- *function 2 handle menu and call the right actions based on the users choice
- */
+
+ //function 2 handle menu and call the right actions based on the users choice
 fun runMenu() {
+    //Show login/register menu until user logs in or exits
+    while (loggedInUser == null) {
+        when (loginMenu()) {
+            1 -> loginUser()
+            2 -> registerUser()
+            3 -> exitApp()
+            else -> println("Invalid option entered.")
+        }
+    }
+
+    //user is logged in, password manager menu
     do {
         when (val option = mainMenu()) {
             1 -> addPassword()
@@ -53,8 +80,42 @@ fun runMenu() {
             8 -> exitApp()
             else -> println("Invalid # entered v_v: $option")
         }
-        //keeps running til user chooses 2 exit
     } while (true)
+}
+
+fun loginUser() {
+    println("== Login ==")
+    print("Enter your email: ")
+    val email = readLine().orEmpty()
+    print("Enter your master password: ")
+    val password = readLine().orEmpty()
+
+    val user = userAPI.login(email, password)
+    if (user != null) {
+        loggedInUser = user
+        println("Login successful. Welcome, ${user.name}!")
+    } else {
+        println("Login failed. Please try again.")
+    }
+}
+
+fun registerUser() {
+    println("== Register a New User ==")
+    print("Enter your name: ")
+    val name = readLine().orEmpty()
+    print("Enter your email: ")
+    val email = readLine().orEmpty()
+    print("Enter your master password: ")
+    val masterPassword = readLine().orEmpty()
+
+    val userId = userAPI.numberOfUsers()
+    val newUser = User(userId, name, email, masterPassword)
+
+    if (userAPI.add(newUser)) {
+        println("Registration successful. Please login now.")
+    } else {
+        println("Registration failed.")
+    }
 }
 
 fun load() {
@@ -149,17 +210,17 @@ fun listPassword(passwordAPI: PasswordAPI) {
     /**
      *gets list of passwords
      */
-        val passwords = passwordAPI.listAllPasswords()
-        if (passwords.isEmpty()) {
-            println("No passwords available.")
-            return
-        } else {
-            println("Here are all the available passwords:")
-            //uses teh withIndex() to get index and object
-            for ((index, password) in passwords.withIndex()) {
-                println("${index + 1}. ${password.Username} - ${password.App} - ${password.Password} (${password.PasswordID})")
-            }
+    val passwords = passwordAPI.listAllPasswords()
+    if (passwords.isEmpty()) {
+        println("No passwords available.")
+        return
+    } else {
+        println("Here are all the available passwords:")
+        //uses teh withIndex() to get index and object
+        for ((index, password) in passwords.withIndex()) {
+            println("${index + 1}. ${password.Username} - ${password.App} - ${password.Password} (${password.PasswordID})")
         }
+    }
 
 
     if (PasswordAPI.numberOfPasswords() > 0) {
@@ -182,9 +243,9 @@ fun listPassword(passwordAPI: PasswordAPI) {
 }
 
 fun exitApp() {
-        println("Exiting...bye")
-        exitProcess(0)
-    }
+    println("Exiting...bye")
+    exitProcess(0)
+}
 
 fun save() {
     try {

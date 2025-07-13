@@ -4,6 +4,6 @@ data class Password (
     var Username: String,
     var App: String,
     var Password: String,
-    var PasswordID: Int?
-
+    var PasswordID: Int?,
+    var userId: Int? = null
 )

@@ -77,4 +77,7 @@ package controllers
                 .joinToString(separator = "\n") { note ->
                     passwords.indexOf(note).toString() + ": " + note.toString()
                 }
+        fun listPasswordsForUser(userId: Int): List<Password> {
+            return passwords.filter { it.userId == userId }
+        }
     }
