@@ -2,12 +2,13 @@ import controllers.PasswordAPI
 import models.Password
 import persistence.JSONSerializer
 import utils.readNextInt
-import utils.readNextLine
 import java.io.File
 import kotlin.system.exitProcess
 
-// private val passwordAPI = PasswordAPI(XMLSerializer(File("passwords.xml")))
-private val PasswordAPI = PasswordAPI(JSONSerializer(File("notes.json")))
+//makes private val passwordAPI = PasswordAPI(XMLSerializer(File("passwords.xml")))
+private val PasswordAPI = PasswordAPI(JSONSerializer(File("passwords.json")))
+
+
 
 fun main() {
     runMenu()
@@ -16,24 +17,29 @@ fun main() {
 fun mainMenu(): Int {
     print(
         """ 
-         > ----------------------------------
-         > |        Password Manager        |
-         > | PASSWORD MENU                  |
-         > |   1) Add a password            |
-         > |   2) List all passwords        |
-         > |   3) Update a password         |
-         > |   4) Delete a password         |         
-         > |   5) Search password (by app)  |
-         > |   6) Save password             |
-         > |   7) Load password             |
-         > ----------------------------------
-         > |   8) Exit                      |
-         > ---------------------------------- 
+         > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         > ☆        Password Manager        ☆
+         > ⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸⧸
+         > ☆ PASSWORD MENU                  ☆
+         > ☆   1) Add a password            ☆
+         > ☆   2) List all passwords        ☆
+         > ☆   3) Update a password         ☆
+         > ☆   4) Delete a password         ☆        
+         > ☆   5) Search password (by app)  ☆
+         > ☆   6) Save password             ☆
+         > ☆   7) Load password             ☆
+         > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         > ☆   8) Exit                      ☆
+         > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          >""".trimMargin(">")
     )
+    //reads users menuchoice
     return readNextInt(" > ==>>")
 }
 
+/**
+ *function 2 handle menu and call the right actions based on the users choice
+ */
 fun runMenu() {
     do {
         when (val option = mainMenu()) {
@@ -45,8 +51,9 @@ fun runMenu() {
             6 -> save()
             7 -> load()
             8 -> exitApp()
-            else -> println("Invalid option entered: $option")
+            else -> println("Invalid # entered v_v: $option")
         }
+        //keeps running til user chooses 2 exit
     } while (true)
 }
 
@@ -54,33 +61,43 @@ fun load() {
     try {
         PasswordAPI.load()
     } catch (e: Exception) {
+        //handles any loading errors
         System.err.println("Error reading from file: $e")
     }
 }
 
 fun deletePassword() {
+    //checks if there are any passwords to delete
     if (PasswordAPI.numberOfPasswords() > 0) {
+        //lists all the paswords
         val passwords = PasswordAPI.listAllPasswords()
         println("Here are all your passwords!")
         passwords.forEachIndexed { index, password ->
             println("$index) ${password.Username} - ${password.App} - ${password.PasswordID}")
         }
-        //ID of the password to delete
-        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
-        val passwordToDelete = PasswordAPI.deletePassword(IDToDelete)
 
+        /**
+         *asks for the id of the password to delete
+         */
+        val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
+        //tries 2 delete
+        val passwordToDelete = PasswordAPI.deletePassword(IDToDelete)
+        //if delete is successful
         if (passwordToDelete != null) {
             println("Delete Successful! Deleted Password: ${passwordToDelete.Username}")
         } else {
-            println("Delete isnt successful")
+            println("Delete isnt successful. ]: ")
         }
     } else {
         println("No passwords to delete! :o")
     }
 }
 fun updatePassword() {
+    /**
+     *checks if there are any passwords to delete
+     */
     if (PasswordAPI.numberOfPasswords() > 0) {
-        // List all passwords
+        //list all passwords
         val passwords = PasswordAPI.listAllPasswords()
         println("Here are all of ur Passwords!")
         passwords.forEach {
@@ -118,8 +135,9 @@ fun addPassword() {
     print("Enter a Password ID: ")
     val PasswordID = readLine()?.toInt()
 
+    //tries 2 add the password
     val isAdded = PasswordAPI.add(Password(Username, App, Password, PasswordID))
-
+//if successful
     if (isAdded) {
         println("Added Successfully")
     } else {
@@ -128,13 +146,17 @@ fun addPassword() {
 }
 
 fun listPassword(passwordAPI: PasswordAPI) {
-        val passwords = passwordAPI.listAllPasswords() // Retrieve the list of passwords
+    /**
+     *gets list of passwords
+     */
+        val passwords = passwordAPI.listAllPasswords()
         if (passwords.isEmpty()) {
             println("No passwords available.")
             return
         } else {
             println("Here are all the available passwords:")
-            for ((index, password) in passwords.withIndex()) { // Use withIndex() to get index and object
+            //uses teh withIndex() to get index and object
+            for ((index, password) in passwords.withIndex()) {
                 println("${index + 1}. ${password.Username} - ${password.App} - ${password.Password} (${password.PasswordID})")
             }
         }
@@ -155,7 +177,7 @@ fun listPassword(passwordAPI: PasswordAPI) {
             else -> println("Invalid option entered: $option")
         }
     } else {
-        println("Option Invalid - No Password stored")
+        println("option invalid, there's No password stored")
     }
 }
 
@@ -168,7 +190,8 @@ fun save() {
     try {
         PasswordAPI.store()
     } catch (e: Exception) {
-        System.err.println("Error writing to file: $e")
+        //handles any saving errors
+        System.err.println("error writing to file: $e")
     }
 }
 
@@ -180,10 +203,12 @@ fun getPasswordByApp(): Password? {
 
 fun searchPassword() {
     println("Searching for password")
-
+    /**
+     *gets password by app or the website name
+     */
     val searchedPassword = getPasswordByApp()
     if (searchedPassword == null) {
-        println("No passowrd found :c")
+        println("No passwrd found :c")
     } else {
         println("Password found! :D $searchedPassword")
     }

@@ -27,7 +27,7 @@ class PasswordAPITest {
         populatedPasswords!!.add(samplePassword!!)  // Initialize properly
     }
 
-    //method kind of cleans up the data after the test
+    //method cleans up the data after the test
     @AfterEach
     fun tearDown() {
         samplePassword = null
@@ -46,5 +46,42 @@ class PasswordAPITest {
         assertTrue(populatedPasswords!!.add(newPassword))
         //verifies size of password list has increased to 2
         assertEquals(2, populatedPasswords!!.numberOfPasswords())
+    }
+
+    // Test to retrieve a password by valid index
+    @Test
+    fun `retrieving a password by valid index returns the correct password`() {
+        val retrievedPassword = populatedPasswords!!.get(0)
+        assertEquals(samplePassword, retrievedPassword)
+    }
+
+    // Test to retrieve a password by invalid index
+    @Test
+    fun `retrieving a password by invalid index returns null`() {
+        val retrievedPassword = populatedPasswords!!.get(100)  // index out of bounds
+        assertNull(retrievedPassword)
+    }
+
+    // Test to delete a password and verify size decreases
+    @Test
+    fun `deleting a password reduces the list size`() {
+        assertEquals(1, populatedPasswords!!.numberOfPasswords())
+        val deleted = populatedPasswords!!.delete(0)
+        assertTrue(deleted)
+        assertEquals(0, populatedPasswords!!.numberOfPasswords())
+    }
+
+    // Test deleting a password with invalid index
+    @Test
+    fun `deleting with invalid index returns false`() {
+        val deleted = populatedPasswords!!.delete(99)
+        assertFalse(deleted)
+    }
+
+    // Test if list is empty initially (after deleting all)
+    @Test
+    fun `list is empty after deleting all passwords`() {
+        populatedPasswords!!.delete(0)
+        assertTrue(populatedPasswords!!.isEmpty())
     }
 }

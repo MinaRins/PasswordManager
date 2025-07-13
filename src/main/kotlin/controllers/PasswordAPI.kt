@@ -55,6 +55,12 @@ package controllers
             return passwords.size
         }
 
+        fun get(index: Int): Password? = findPassword(index)
+
+        fun delete(index: Int): Boolean = deletePassword(index) != null
+
+        fun isEmpty(): Boolean = passwords.isEmpty()
+
 
         @Throws(Exception::class)
         fun load() {
