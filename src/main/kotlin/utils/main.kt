@@ -137,9 +137,9 @@ fun deletePassword() {
             println("$index) ${password.Username} - ${password.App} - ${password.PasswordID}")
         }
 
-        /**
-         *asks for the id of the password to delete
-         */
+
+         //asks for the id of the password to delete
+
         val IDToDelete = readNextInt("Enter the ID of the Password to delete: ")
         //tries 2 delete
         val passwordToDelete = PasswordAPI.deletePassword(IDToDelete)
@@ -154,9 +154,9 @@ fun deletePassword() {
     }
 }
 fun updatePassword() {
-    /**
-     *checks if there are any passwords to delete
-     */
+
+     //checks if there are any passwords to delete
+
     if (PasswordAPI.numberOfPasswords() > 0) {
         //list all passwords
         val passwords = PasswordAPI.listAllPasswords()
@@ -207,9 +207,9 @@ fun addPassword() {
 }
 
 fun listPassword(passwordAPI: PasswordAPI) {
-    /**
-     *gets list of passwords
-     */
+
+     //gets list of passwords
+
     val passwords = passwordAPI.listAllPasswords()
     if (passwords.isEmpty()) {
         println("No passwords available.")
@@ -238,7 +238,7 @@ fun listPassword(passwordAPI: PasswordAPI) {
             else -> println("Invalid option entered: $option")
         }
     } else {
-        println("option invalid, there's No password stored")
+        println("option invalid, theres No password stored")
     }
 }
 
@@ -264,12 +264,10 @@ fun getPasswordByApp(): Password? {
 
 fun searchPassword() {
     println("Searching for password")
-    /**
-     *gets password by app or the website name
-     */
+    //gets password by app or the website name
     val searchedPassword = getPasswordByApp()
     if (searchedPassword == null) {
-        println("No passwrd found :c")
+        println("No password found :c")
     } else {
         println("Password found! :D $searchedPassword")
     }

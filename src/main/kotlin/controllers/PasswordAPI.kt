@@ -28,7 +28,7 @@ package controllers
                 foundPassword.Username = updatedPassword.Username
                 foundPassword.App = updatedPassword.App
                 foundPassword.Password = updatedPassword.Password
-                // Do not update the ID!
+                //do not update the ID!
                 return true
             }
             return false
