@@ -72,11 +72,6 @@ package controllers
             serializer.write(passwords)
         }
 
-        private fun formatListString(passwordsToFormat: List<Password>): String =
-            passwordsToFormat
-                .joinToString(separator = "\n") { note ->
-                    passwords.indexOf(note).toString() + ": " + note.toString()
-                }
         fun listPasswordsForUser(userId: Int): List<Password> {
             return passwords.filter { it.userId == userId }
         }
